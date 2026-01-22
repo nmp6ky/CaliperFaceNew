@@ -1,4 +1,4 @@
-name: Deploy CaliperFace
+name: Deploy CaliperForm
 
 on:
   push:
