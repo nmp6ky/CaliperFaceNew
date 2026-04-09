@@ -5,7 +5,7 @@ export default function ServiceDown() {
   const nav = useNavigate();
 
   return (
-    <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         <CardHeader
           header={<Text size={600} weight="semibold">Service Unavailable</Text>}

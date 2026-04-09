@@ -351,7 +351,7 @@ export default function Scheduling() {
   };
 
   return (
-    <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         {/* Header block + divider (matches Landing/Appeal/Uploads) */}
         <div style={{ padding: 24, paddingBottom: 16 }}>
@@ -456,7 +456,7 @@ export default function Scheduling() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
                   gap: 12,
                   alignItems: "start",
                 }}

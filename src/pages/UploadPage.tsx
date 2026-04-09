@@ -67,7 +67,7 @@ export default function UploadPage() {
     ) : null;
 
   return (
-    <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         {/* Header block (matches Landing/Appeal) */}
         <div style={{ padding: 24, paddingBottom: 16 }}>

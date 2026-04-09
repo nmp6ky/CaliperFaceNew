@@ -16,7 +16,7 @@ export default function Scheduling() {
   useIntake(); // Keeping this hook call in case your flow expects intake context initialization.
 
   return (
-    <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         {/* Header block + divider (matches Landing/Appeal/Uploads) */}
         <div style={{ padding: 24, paddingBottom: 16 }}>

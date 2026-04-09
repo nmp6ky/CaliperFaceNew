@@ -134,7 +134,7 @@ export default function AppealForm() {
   }, [a, ownerEmailOk, ownerPhoneOk]);
 
   return (
-    <div style={{ maxWidth: 980, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 980, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         {/* Header block above the form title (matches Landing) */}
         <div style={{ padding: 24, paddingBottom: 16 }}>

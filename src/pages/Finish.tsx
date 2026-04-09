@@ -79,7 +79,7 @@ export default function Finish() {
 
   if (confirming) {
     return (
-      <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
         <Card>
           <div style={{ padding: 24, display: "flex", alignItems: "center", gap: 10 }}>
             <Spinner />
@@ -92,7 +92,7 @@ export default function Finish() {
 
   if (confirmError) {
     return (
-      <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
         <Card>
           <div style={{ padding: 24, display: "grid", gap: 10 }}>
             <Text weight="semibold">Confirmation required</Text>
@@ -113,7 +113,7 @@ export default function Finish() {
   const hearingScheduled = confirmation?.hearing_scheduled ?? confirmation?.hearingScheduled;
 
   return (
-    <div style={{ maxWidth: 860, margin: "40px auto", padding: 16 }}>
+    <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
       <Card>
         {/* Header block + divider (matches other pages) */}
         <div style={{ padding: 24, paddingBottom: 16 }}>
