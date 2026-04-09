@@ -121,7 +121,7 @@ export default function SignaturePad({
         ref={canvasRef}
         style={{
           border: "1px solid #c8c8c8",
-          borderRadius: 8,
+          borderRadius: 0,
           background: "white",
           touchAction: "none",
           display: "block",

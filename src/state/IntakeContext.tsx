@@ -16,11 +16,11 @@ const defaultIntake = {
     situsAddress: "",
     situsCity: "",
     situsZip: "",
-    hearingMode: "IN_PERSON",
+    hearingMode: "",
     isFilingThreePlus: null,
     ownerOpinionValue: "",
     narrative: "",
-    hasAuthorizedAgent: false,
+    hasAuthorizedAgent: null,
     contacts: {
       owner: { ...emptyContact },
       agent: { ...emptyContact },

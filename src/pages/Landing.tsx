@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -63,8 +63,8 @@ export default function Landing() {
             {/* Single advisory card */}
             <Card
               style={{
-                borderLeft: "6px solid #c50f1f",
-                background: "#fdeaea",
+                borderLeft: "6px solid #111111",
+                background: "#f3f4f6",
                 marginBottom: 16,
               }}
             >
@@ -82,8 +82,8 @@ export default function Landing() {
             {/* Single advisory card */}
             <Card
               style={{
-                borderLeft: "6px solid #555555",
-                background: "#ffffff8b",
+                borderLeft: "6px solid #6b7280",
+                background: "#f9fafb",
                 marginBottom: 16,
               }}
             >

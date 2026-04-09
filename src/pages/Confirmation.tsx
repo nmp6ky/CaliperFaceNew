@@ -270,7 +270,7 @@ export default function Confirmation() {
                 style={{
                   marginTop: 8,
                   border: "1px solid #c8c8c8",
-                  borderRadius: 8,
+                  borderRadius: 0,
                   maxWidth: 420,
                 }}
               />

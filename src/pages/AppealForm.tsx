@@ -15,7 +15,7 @@ import {
 import { useIntake } from "../state/IntakeContext";
 
 const hearingModes = [
-  { value: "IN_PERSON", label: "In person" },
+  { value: "IN_PERSON", label: "In-person" },
   { value: "PHONE", label: "Phone" },
   { value: "WAIVED", label: "Waived" },
 ];
@@ -55,7 +55,7 @@ function ContactCard({ role, label, contact, onChange }) {
   const ownerPhoneOk = !ownerPhoneRequired ? phoneOk : isValidPhone(phoneTrim);
 
   return (
-    <div style={{ border: "1px solid #e0e0e0", borderRadius: 8, padding: 12, display: "grid", gap: 10 }}>
+    <div style={{ border: "1px solid #d1d5db", borderRadius: 0, padding: 12, display: "grid", gap: 10 }}>
       <Text weight="semibold">{label}</Text>
       <Field label="Full Name">
         <Input value={contact.fullName} onChange={(_, d) => onChange({ fullName: d.value })} />
@@ -143,7 +143,14 @@ export default function AppealForm() {
           <Field label="Property Account Number" required>
             <Input
               value={a.accountNumber}
-              onChange={(_, d) => updateAppeal({ accountNumber: d.value })}
+              inputMode="numeric"
+              onChange={(_, d) =>
+                updateAppeal({
+                  accountNumber: (d.value || "").replace(/\D/g, "").slice(0, 10),
+                })
+              }
+              maxLength={10}
+              placeholder="Up to 10 digits"
             />
           </Field>
 
@@ -151,16 +158,21 @@ export default function AppealForm() {
             <Input value={a.ownerName} onChange={(_, d) => updateAppeal({ ownerName: d.value })} />
           </Field>
 
-          <Field label="Situs Address" required>
+          <Field label="Property Street Address" required>
             <Input value={a.situsAddress} onChange={(_, d) => updateAppeal({ situsAddress: d.value })} />
           </Field>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
-            <Field label="Situs City" required>
+          <div className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(120px,180px)]">
+            <Field label="Property City" required>
               <Input value={a.situsCity} onChange={(_, d) => updateAppeal({ situsCity: d.value })} />
             </Field>
-            <Field label="Situs ZIP" required>
-              <Input value={a.situsZip} onChange={(_, d) => updateAppeal({ situsZip: d.value })} />
+            <Field label="Property ZIP" required>
+              <Input
+                value={a.situsZip}
+                inputMode="numeric"
+                maxLength={5}
+                onChange={(_, d) => updateAppeal({ situsZip: (d.value || "").replace(/\D/g, "").slice(0, 5) })}
+              />
             </Field>
           </div>
 

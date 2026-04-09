@@ -43,7 +43,7 @@ export default function UploadPage() {
               justifyContent: "space-between",
               alignItems: "center",
               border: "1px solid #e1e1e1",
-              borderRadius: 10,
+              borderRadius: 0,
               padding: "10px 12px",
               gap: 10,
             }}
