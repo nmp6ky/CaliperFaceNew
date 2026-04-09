@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
-  CardHeader,
   CardFooter,
   Button,
   Text,
@@ -12,11 +11,8 @@ import {
   RadioGroup,
   Radio,
   Divider,
-  Title1,
-  Subtitle1,
 } from "@fluentui/react-components";
 import { useIntake } from "../state/IntakeContext";
-import boeLogo from "../assets/boe-logo.png";
 
 const hearingModes = [
   { value: "IN_PERSON", label: "In person" },
@@ -67,7 +63,7 @@ function ContactCard({ role, label, contact, onChange }) {
       <Field label="Mailing Address">
         <Input value={contact.mailingAddress} onChange={(_, d) => onChange({ mailingAddress: d.value })} />
       </Field>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
         <Field
           label="Telephone"
           required={role === "owner"}
@@ -135,36 +131,7 @@ export default function AppealForm() {
 
   return (
     <div style={{ maxWidth: 980, margin: "0 auto", padding: "8px 0" }}>
-      <Card>
-        {/* Header block above the form title (matches Landing) */}
-        <div style={{ padding: 24, paddingBottom: 16 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
-            <img
-              src={boeLogo}
-              alt="St. Charles County Board of Equalization"
-              style={{
-                height: 44,
-                width: "auto",
-                objectFit: "contain",
-              }}
-            />
-            <Subtitle1>St. Charles County Board of Equalization</Subtitle1>
-          </div>
-
-          <Title1>Property Tax Assessment Appeal Form</Title1>
-
-          {/* Divider under the header */}
-          <div style={{ height: 12 }} />
-          <Divider />
-        </div>
+      <Card style={{ border: "none", boxShadow: "none", background: "transparent" }}>
 
         {/* Section header aligned with form content */}
         <div style={{ padding: "0 16px" }}>
@@ -188,7 +155,7 @@ export default function AppealForm() {
             <Input value={a.situsAddress} onChange={(_, d) => updateAppeal({ situsAddress: d.value })} />
           </Field>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             <Field label="Situs City" required>
               <Input value={a.situsCity} onChange={(_, d) => updateAppeal({ situsCity: d.value })} />
             </Field>

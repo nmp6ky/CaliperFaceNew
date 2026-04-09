@@ -7,11 +7,8 @@ import {
   Text,
   Divider,
   Spinner,
-  Title1,
-  Subtitle1,
 } from "@fluentui/react-components";
 import { useIntake } from "../state/IntakeContext";
-import boeLogo from "../assets/boe-logo.png";
 import { confirmIntake, toErrorMessage, isLikelyServiceDown } from "../api/intakeClient";
 
 function formatIso(iso) {
@@ -114,35 +111,7 @@ export default function Finish() {
 
   return (
     <div style={{ maxWidth: 860, margin: "0 auto", padding: "8px 0" }}>
-      <Card>
-        {/* Header block + divider (matches other pages) */}
-        <div style={{ padding: 24, paddingBottom: 16 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              flexWrap: "wrap",
-              marginBottom: 10,
-            }}
-          >
-            <img
-              src={boeLogo}
-              alt="St. Charles County Board of Equalization"
-              style={{
-                height: 44,
-                width: "auto",
-                objectFit: "contain",
-              }}
-            />
-            <Subtitle1>St. Charles County Board of Equalization</Subtitle1>
-          </div>
-
-          <Title1>Property Tax Assessment Appeal Form</Title1>
-
-          <div style={{ height: 12 }} />
-          <Divider />
-        </div>
+      <Card style={{ border: "none", boxShadow: "none", background: "transparent" }}>
 
         {/* Section header aligned with content (replaces CardHeader) */}
         <div style={{ padding: "12px 16px 0", display: "grid", gap: 6 }}>

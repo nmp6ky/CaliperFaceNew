@@ -5,14 +5,12 @@ import {
   Card,
   Divider,
   Title1,
-  Subtitle1,
   Body1,
   MessageBar,
   MessageBarTitle,
   MessageBarBody,
   MessageBarActions,
 } from "@fluentui/react-components";
-import boeLogo from "../assets/boe-logo.png";
 
 export default function Landing() {
   const nav = useNavigate();
@@ -41,17 +39,7 @@ export default function Landing() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        padding: 24,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        background: "var(--colorNeutralBackground2)",
-      }}
-    >
-      <div style={{ width: "min(980px, 100%)" }}>
+    <div style={{ width: "min(980px, 100%)", margin: "0 auto", padding: "8px 0" }}>
         {showNotice && (
           <div style={{ marginBottom: 16 }}>
             <MessageBar intent="warning">
@@ -70,34 +58,8 @@ export default function Landing() {
           </div>
         )}
 
-        <Card>
-          {/* Header block above the form title */}
-          <div style={{ padding: 24, paddingBottom: 0 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 14,
-                flexWrap: "wrap",
-                marginBottom: 10,
-              }}
-            >
-              <img
-                src={boeLogo}
-                alt="St. Charles County Board of Equalization"
-                style={{
-                  height: 44,
-                  width: "auto",
-                  objectFit: "contain",
-                }}
-              />
-              <Subtitle1>St. Charles County Board of Equalization</Subtitle1>
-            </div>
-
-            <Title1>Property Tax Assessment Appeal Form</Title1>
-          </div>
-
-          <div style={{ padding: 24, paddingTop: 16 }}>
+        <Card style={{ border: "none", boxShadow: "none", background: "transparent" }}>
+          <div style={{ padding: 0 }}>
             {/* Single advisory card */}
             <Card
               style={{
@@ -301,7 +263,6 @@ export default function Landing() {
             </div>
           </div>
         </Card>
-      </div>
     </div>
   );
 }
