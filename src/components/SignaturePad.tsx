@@ -1,13 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@fluentui/react-components";
 
+type SignaturePadProps = {
+  width?: number;
+  height?: number;
+  onChangePngDataUrl?: (value: string) => void;
+};
+
 export default function SignaturePad({
   width = 720,
   height = 180,
   onChangePngDataUrl,
-}) {
-  const canvasRef = useRef(null);
-  const ctxRef = useRef(null);
+}: SignaturePadProps) {
+  const canvasRef = useRef<any>(null);
+  const ctxRef = useRef<any>(null);
 
   const drawingRef = useRef(false);
   const lastRef = useRef({ x: 0, y: 0 });

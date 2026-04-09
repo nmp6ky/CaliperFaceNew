@@ -1,3 +1,10 @@
+type IntakeClientError = Error & {
+  httpStatus?: number;
+  code?: string | null;
+  userMessage?: string | null;
+  isNetworkError?: boolean;
+};
+
 const RAW_BASE_URL = import.meta.env.VITE_INTAKE_API_BASE_URL || "";
 
 /**
@@ -5,7 +12,7 @@ const RAW_BASE_URL = import.meta.env.VITE_INTAKE_API_BASE_URL || "";
  * - "" stays ""
  * - "https://x.com/" becomes "https://x.com"
  */
-function normalizeBaseUrl(raw) {
+function normalizeBaseUrl(raw: string) {
   const s = String(raw || "").trim();
   if (!s) return "";
   return s.endsWith("/") ? s.slice(0, -1) : s;
@@ -13,7 +20,7 @@ function normalizeBaseUrl(raw) {
 
 const BASE_URL = normalizeBaseUrl(RAW_BASE_URL);
 
-export function toErrorMessage(err) {
+export function toErrorMessage(err: any) {
   if (!err) return "Unknown error";
   if (typeof err === "string") return err;
   if (err?.userMessage) return String(err.userMessage);
@@ -29,7 +36,7 @@ export function toErrorMessage(err) {
  * Best-effort check: if fetch failed due to network/DNS/CORS/timeout, treat as service down.
  * If server responded with HTTP status, that is NOT "service down".
  */
-export function isLikelyServiceDown(err) {
+export function isLikelyServiceDown(err: any) {
   if (!err) return false;
   if (err?.name === "AbortError") return true;
   if (err?.isNetworkError) return true;
@@ -44,7 +51,7 @@ export function isLikelyServiceDown(err) {
   );
 }
 
-async function readErrorPayload(res) {
+async function readErrorPayload(res: Response) {
   // Try JSON first
   const ct = res.headers.get("content-type") || "";
   if (ct.includes("application/json")) {
@@ -67,7 +74,15 @@ async function readErrorPayload(res) {
   }
 }
 
-export async function submitIntake({ payload, files, timeoutMs = 120000 }) {
+export async function submitIntake({
+  payload,
+  files,
+  timeoutMs = 120000,
+}: {
+  payload: any;
+  files: File[];
+  timeoutMs?: number;
+}) {
   const url = `${BASE_URL}/api/intake/submit`;
 
   const form = new FormData();
@@ -94,7 +109,7 @@ export async function submitIntake({ payload, files, timeoutMs = 120000 }) {
     if (!res.ok) {
       const { code, message } = await readErrorPayload(res);
 
-      const e = new Error(
+      const e: IntakeClientError = new Error(
         message
           ? `Submit failed (${res.status}). ${message}`.trim()
           : `Submit failed (${res.status}).`
@@ -115,18 +130,75 @@ export async function submitIntake({ payload, files, timeoutMs = 120000 }) {
   } catch (err) {
     // Distinguish network error
     if (err?.name === "AbortError") {
-      const e = new Error("Request timed out while submitting. Please try again.");
+      const e: IntakeClientError = new Error("Request timed out while submitting. Please try again.");
       e.isNetworkError = true;
       throw e;
     }
 
     // Browser fetch failures are often TypeError with "Failed to fetch"
     if (err instanceof TypeError) {
-      const e = new Error("Unable to reach the intake service. Please try again.");
+      const e: IntakeClientError = new Error("Unable to reach the intake service. Please try again.");
       e.isNetworkError = true;
       throw e;
     }
 
+    throw err;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+export async function confirmIntake({
+  receiptId,
+  confirmationToken,
+  timeoutMs = 15000,
+}: {
+  receiptId: string;
+  confirmationToken: string;
+  timeoutMs?: number;
+}) {
+  const url = `${BASE_URL}/api/intake/confirm`;
+
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ receiptId, confirmationToken }),
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      const { code, message } = await readErrorPayload(res);
+      const e: IntakeClientError = new Error(
+        message
+          ? `Confirmation failed (${res.status}). ${message}`.trim()
+          : `Confirmation failed (${res.status}).`
+      );
+      e.httpStatus = res.status;
+      e.code = code || null;
+      e.userMessage = message || null;
+      throw e;
+    }
+
+    try {
+      return await res.json();
+    } catch {
+      return { status: "CONFIRMED" };
+    }
+  } catch (err) {
+    if (err?.name === "AbortError") {
+      const e: IntakeClientError = new Error("Request timed out while confirming. Please try again.");
+      e.isNetworkError = true;
+      throw e;
+    }
+    if (err instanceof TypeError) {
+      const e: IntakeClientError = new Error("Unable to reach the intake service. Please try again.");
+      e.isNetworkError = true;
+      throw e;
+    }
     throw err;
   } finally {
     clearTimeout(t);

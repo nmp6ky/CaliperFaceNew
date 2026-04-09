@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 const STORAGE_KEY = "tin_intake_v2";
 
@@ -17,13 +17,13 @@ const defaultIntake = {
     situsCity: "",
     situsZip: "",
     hearingMode: "IN_PERSON",
+    isFilingThreePlus: null,
     ownerOpinionValue: "",
     narrative: "",
+    hasAuthorizedAgent: false,
     contacts: {
       owner: { ...emptyContact },
       agent: { ...emptyContact },
-      attorney: { ...emptyContact },
-      other: { ...emptyContact },
     },
     primaryContactRole: "OWNER",
   },
@@ -31,7 +31,10 @@ const defaultIntake = {
   uploads: [],     // in-memory only: [{id,file,name,size,type}]
   scheduling: {
     wantsToSchedule: null, // true/false (kept for future use)
-    slot: null,            // later: {start,end}
+    slotId: null,
+    slot: null,            // later: {id,start,end}
+    availableDays: null,   // fetched open slot days
+    availableTimesByDay: {}, // { "YYYY-MM-DD": [{id,label,start,end}] }
   },
   signature: {
     pngDataUrl: "",
@@ -41,12 +44,15 @@ const defaultIntake = {
   submission: {
     receiptId: "",
     submittedAtIso: "",
+    confirmationToken: "",
+    confirmation: null,
+    appealNo: "",
   },
 };
 
-const IntakeContext = createContext(null);
+const IntakeContext = createContext<any>(null);
 
-function safeParse(raw) {
+function safeParse(raw: string | null) {
   try {
     return raw ? JSON.parse(raw) : null;
   } catch {
@@ -58,7 +64,7 @@ function newId() {
   return crypto?.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
 }
 
-export function IntakeProvider({ children }) {
+export function IntakeProvider({ children }: { children: ReactNode }) {
   const [intake, setIntake] = useState(() => {
     const persisted = safeParse(localStorage.getItem(STORAGE_KEY));
     if (!persisted) return defaultIntake;
@@ -102,6 +108,19 @@ export function IntakeProvider({ children }) {
       updateAppeal: (patch) =>
         setIntake((prev) => ({ ...prev, appeal: { ...prev.appeal, ...patch } })),
 
+      setHasAuthorizedAgent: (flag) =>
+        setIntake((prev) => {
+          const next = { ...prev, appeal: { ...prev.appeal, hasAuthorizedAgent: !!flag } };
+          if (!flag) {
+            next.appeal.contacts = {
+              ...prev.appeal.contacts,
+              agent: { ...emptyContact },
+            };
+            next.appeal.primaryContactRole = "OWNER";
+          }
+          return next;
+        }),
+
       updateContact: (role, patch) =>
         setIntake((prev) => {
           const contacts = prev.appeal.contacts || {};
@@ -130,7 +149,7 @@ export function IntakeProvider({ children }) {
       setScheduling: (patch) =>
         setIntake((prev) => ({ ...prev, scheduling: { ...prev.scheduling, ...patch } })),
 
-      addUploads: (files) =>
+      addUploads: (files, category = "support") =>
         setIntake((prev) => {
           const additions = Array.from(files || []).map((file) => {
             const id = newId();
@@ -140,6 +159,7 @@ export function IntakeProvider({ children }) {
               name: file.name,
               size: file.size,
               type: file.type || "application/octet-stream",
+              category,
             };
           });
 
@@ -147,7 +167,17 @@ export function IntakeProvider({ children }) {
 
           // Keep meta aligned with uploads. If user re-attaches after refresh,
           // we REPLACE meta with current selections (avoid ghost stale meta).
-          const uploadsMeta = uploads.map(({ id, name, size, type }) => ({ id, name, size, type }));
+          const uploadsMeta = uploads.map(({ id, name, size, type, category }) => ({
+            id,
+            name,
+            size,
+            type,
+            category,
+            docType:
+              category === "agent"
+                ? "AGENT_AUTHORIZATION_FORM"
+                : "SUPPORTING_DOCUMENTATION",
+          }));
 
           return { ...prev, uploads, uploadsMeta };
         }),
