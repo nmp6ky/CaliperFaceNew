@@ -22,9 +22,14 @@ export default function SiteShell() {
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center px-4 sm:px-6">
           <Link to="/landing" className="flex items-center gap-3">
             <img src={boeLogo} alt="St. Charles County Board of Equalization" className="h-9 w-auto object-contain" />
-            <span className="hidden text-sm font-semibold text-slate-700 sm:inline">
-              St. Charles County BOE
-            </span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-sm font-semibold text-slate-900 sm:text-base">
+                Property Tax Asssessment Appeal
+              </span>
+              <span className="text-[11px] text-slate-600 sm:text-xs">
+                St. Charles County Board of Equalization
+              </span>
+            </div>
           </Link>
         </div>
         <div className="border-t border-slate-300 bg-slate-100">
